@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g stroke="#276b70" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Short, stubby flippers -->
+    <path fill="#54cdb4" d="M78 151c-19-15-39-16-49-7-9 9-3 24 12 32 15 8 33 6 48-4z"/>
+    <path fill="#54cdb4" d="M178 151c19-15 39-16 49-7 9 9 3 24-12 32-15 8-33 6-48-4z"/>
+    <path fill="#54cdb4" d="M101 183c-16 9-23 25-16 35 8 10 25 5 37-10l-5-22zm54 0c16 9 23 25 16 35-8 10-25 5-37-10l5-22z"/>
+    <!-- Simple colorful shell -->
+    <path fill="#20a99e" d="M75 132c0-36 24-57 53-57s53 21 53 57v38c0 20-24 32-53 32s-53-12-53-32z"/>
+    <path fill="#37c3aa" d="M91 131c0-23 16-39 37-39s37 16 37 39v27c0 15-17 25-37 25s-37-10-37-25z"/>
+    <path fill="#ffd766" stroke="none" d="M119 96h18v22h-18zM96 128h24v17H96zm40 0h24v17h-24zm-17 31h18v20h-18z"/>
+    <path fill="#ff947e" stroke="none" d="M120 124h16v18h-16zM100 151h19v12h-19zm37 0h19v12h-19z"/>
+    <!-- Big rounded mint head -->
+    <path fill="#8be5c9" d="M68 111c0-45 25-76 60-76s60 31 60 76v37c0 40-25 66-60 66s-60-26-60-66z"/>
+    <path fill="#b8f2dc" stroke="none" d="M84 75c10-18 25-29 44-31-26 19-35 44-35 72v33c0 18 4 34 13 46-20-12-29-32-29-58v-34c0-10 2-20 7-28z"/>
+    <!-- Large sparkling eyes -->
+    <ellipse cx="104" cy="118" rx="19" ry="24" fill="#fff" stroke="none"/>
+    <ellipse cx="152" cy="118" rx="19" ry="24" fill="#fff" stroke="none"/>
+    <ellipse cx="108" cy="122" rx="9" ry="13" fill="#205669" stroke="none"/>
+    <ellipse cx="148" cy="122" rx="9" ry="13" fill="#205669" stroke="none"/>
+    <circle cx="112" cy="115" r="4" fill="#fff" stroke="none"/>
+    <circle cx="152" cy="115" r="4" fill="#fff" stroke="none"/>
+    <path fill="#ff9d98" stroke="none" d="M77 146c9-7 19-5 24 3-5 9-15 11-24 6zm78 3c5-8 15-10 24-3v9c-9 5-19 3-24-6z"/>
+    <!-- Warm, simple smile -->
+    <path fill="none" stroke="#276b70" stroke-width="6" d="M108 157c10 14 30 14 40 0"/>
+    <path fill="#fff" stroke="none" d="M119 158h18c-3 5-6 7-9 7s-6-2-9-7z"/>
+  </g>
+</svg>
