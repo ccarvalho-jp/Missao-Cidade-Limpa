@@ -1,8 +1,8 @@
-# Missão Praia Limpa
+# Missão Cidade Limpa
 
 Jogo educativo mobile feito em Godot para crianças do 5º ano. A Tuca, uma tartaruga parceira, acompanha a criança enquanto ela aprende a separar resíduos e cuidar do oceano.
 
-> **Status:** protótipo jogável. A exportação Android e a publicação Web ainda precisam ser feitas pelo projeto Godot.
+> **Status:** protótipo jogável. O código e a exportação Web estão no repositório; um APK de teste está disponível na página de Releases.
 
 ## Como jogar no computador
 
