@@ -76,10 +76,4 @@ assets/ui/             Tuca e verso das cartas
 web-build/             Exportação Web para hospedagem (gerada pelo Godot)
 ```
 
-## Observação educativa
 
-O jogo usa as cores e categorias definidas para este projeto. Regras locais de coleta seletiva podem variar; confirme a orientação do município antes de usar o jogo como material pedagógico oficial.
-
-## Licença
-
-Licença ainda não definida pelo responsável pelo projeto.
