@@ -512,9 +512,26 @@ func _build_share_screen() -> void:
 
 	_add_share_card(cards_container, "📱", "BAIXAR APK", "Instale no seu Android\ne jogue offline", APK_DOWNLOAD_URL, Color("#4388df"))
 	_add_share_card(cards_container, "🌐", "JOGAR NA WEB", "Abra no navegador\nsem instalar nada", WEB_PLAY_URL, Color("#36a876"))
+	cards_container.visible = false
+	cards_container.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+	var qr_toggle := Button.new()
+	qr_toggle.text = "Mostrar QR codes"
+	qr_toggle.custom_minimum_size.y = 48
+	qr_toggle.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	qr_toggle.add_theme_font_size_override("font_size", 16)
+	qr_toggle.add_theme_color_override("font_color", INK)
+	qr_toggle.add_theme_stylebox_override("normal", _panel_style(Color("#d8f2e7"), 16))
+	qr_toggle.add_theme_stylebox_override("hover", _panel_style(Color("#c5ead9"), 16))
+	qr_toggle.add_theme_stylebox_override("pressed", _panel_style(Color("#b5dfca"), 16))
+	qr_toggle.pressed.connect(func():
+		cards_container.visible = not cards_container.visible
+		qr_toggle.text = "Ocultar QR codes" if cards_container.visible else "Mostrar QR codes"
+	)
+	layout.add_child(qr_toggle)
 
 	var start_btn := Button.new()
-	start_btn.text = "COMEÇAR AGORA"
+	start_btn.text = "NOVO JOGO"
 	start_btn.custom_minimum_size.y = 56
 	start_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	start_btn.add_theme_font_size_override("font_size", 18)
@@ -584,7 +601,7 @@ func _load_qr_code_async(qr_rect: TextureRect, url: String) -> void:
 	http.request(qr_url)
 
 
-func _on_qr_loaded(qr_rect: TextureRect, result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+func _on_qr_loaded(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, qr_rect: TextureRect) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200 or body.is_empty():
 		return
 	var img := Image.new()
