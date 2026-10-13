@@ -585,11 +585,11 @@ func _load_qr_code_async(qr_rect: TextureRect, url: String) -> void:
 
 
 func _on_qr_loaded(qr_rect: TextureRect, result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
-	if response_code == 200 and body.size() > 0:
-		var img := Image.create_from_data(body.size(), body.size(), false, Image.FORMAT_RGBA8, body)
-		if img:
-			var tex := ImageTexture.create_from_image(img)
-			qr_rect.texture = tex
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200 or body.is_empty():
+		return
+	var img := Image.new()
+	if img.load_png_from_buffer(body) == OK:
+		qr_rect.texture = ImageTexture.create_from_image(img)
 
 
 func _copy_to_clipboard(text: String) -> void:
