@@ -3,6 +3,8 @@ extends Control
 # URLs para os QR codes — substitua pelos links reais quando publicar
 const APK_DOWNLOAD_URL := "https://github.com/ccarvalho-jp/Missao-Cidade-Limpa/releases/latest/download/MissaoCidadeLimpa.apk"
 const WEB_PLAY_URL := "https://missao-cidade-limpa.vercel.app"
+const APK_QR_TEXTURE := preload("res://assets/ui/qr_apk.png")
+const WEB_QR_TEXTURE := preload("res://assets/ui/qr_web.png")
 
 const BIN_DATA := [
 	{"id": "plastico", "name": "PLÁSTICO", "asset": "res://assets/bins/bin_plastic.svg", "color": Color("#df5358")},
@@ -510,8 +512,8 @@ func _build_share_screen() -> void:
 	cards_container.add_theme_constant_override("separation", 16)
 	layout.add_child(cards_container)
 
-	_add_share_card(cards_container, "📱", "BAIXAR APK", "Instale no seu Android\ne jogue offline", APK_DOWNLOAD_URL, Color("#4388df"))
-	_add_share_card(cards_container, "🌐", "JOGAR NA WEB", "Abra no navegador\nsem instalar nada", WEB_PLAY_URL, Color("#36a876"))
+	_add_share_card(cards_container, "📱", "BAIXAR APK", "Instale no seu Android\ne jogue offline", APK_DOWNLOAD_URL, APK_QR_TEXTURE, Color("#4388df"))
+	_add_share_card(cards_container, "🌐", "JOGAR NA WEB", "Abra no navegador\nsem instalar nada", WEB_PLAY_URL, WEB_QR_TEXTURE, Color("#36a876"))
 	cards_container.visible = false
 	cards_container.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 
@@ -543,7 +545,7 @@ func _build_share_screen() -> void:
 	layout.add_child(start_btn)
 
 
-func _add_share_card(parent: HBoxContainer, icon: String, title: String, description: String, url: String, color: Color) -> void:
+func _add_share_card(parent: HBoxContainer, icon: String, title: String, description: String, url: String, qr_texture: Texture2D, color: Color) -> void:
 	var card := PanelContainer.new()
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -576,8 +578,8 @@ func _add_share_card(parent: HBoxContainer, icon: String, title: String, descrip
 	qr_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	qr_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	qr_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	qr_rect.texture = qr_texture
 	card_layout.add_child(qr_rect)
-	_load_qr_code_async(qr_rect, url)
 
 	card_layout.add_child(_label("Aponte a câmera ou toque para copiar", 11, Color("#7a9aa0"), HORIZONTAL_ALIGNMENT_CENTER))
 
@@ -591,22 +593,6 @@ func _add_share_card(parent: HBoxContainer, icon: String, title: String, descrip
 	copy_btn.add_theme_stylebox_override("pressed", _panel_style(color.darkened(0.1), 12))
 	copy_btn.pressed.connect(_copy_to_clipboard.bind(url))
 	card_layout.add_child(copy_btn)
-
-
-func _load_qr_code_async(qr_rect: TextureRect, url: String) -> void:
-	var http := HTTPRequest.new()
-	add_child(http)
-	var qr_url := "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=" + url.uri_encode()
-	http.request_completed.connect(_on_qr_loaded.bind(qr_rect))
-	http.request(qr_url)
-
-
-func _on_qr_loaded(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, qr_rect: TextureRect) -> void:
-	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200 or body.is_empty():
-		return
-	var img := Image.new()
-	if img.load_png_from_buffer(body) == OK:
-		qr_rect.texture = ImageTexture.create_from_image(img)
 
 
 func _copy_to_clipboard(text: String) -> void:
