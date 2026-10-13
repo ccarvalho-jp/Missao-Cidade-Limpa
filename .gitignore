@@ -6,3 +6,5 @@
 *.aab
 *.keystore
 *.jks
+*.apk.idsig
+*.idsig

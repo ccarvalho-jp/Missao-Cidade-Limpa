@@ -1,5 +1,9 @@
 extends Control
 
+# URLs para os QR codes — substitua pelos links reais quando publicar
+const APK_DOWNLOAD_URL := "https://github.com/ccarvalho-jp/Missao-Cidade-Limpa/releases/latest/download/MissaoCidadeLimpa.apk"
+const WEB_PLAY_URL := "https://missao-cidade-limpa.vercel.app"
+
 const BIN_DATA := [
 	{"id": "plastico", "name": "PLÁSTICO", "asset": "res://assets/bins/bin_plastic.svg", "color": Color("#df5358")},
 	{"id": "papel", "name": "PAPEL", "asset": "res://assets/bins/bin_paper.svg", "color": Color("#4388df")},
@@ -61,7 +65,7 @@ var round_total := 0
 func _ready() -> void:
 	sound_player = AudioStreamPlayer.new()
 	add_child(sound_player)
-	_build_game()
+	_build_share_screen()
 
 
 func _build_game() -> void:
@@ -452,6 +456,151 @@ func _play_feedback_tone(correct: bool) -> void:
 	wave.data = samples
 	sound_player.stream = wave
 	sound_player.play()
+
+
+func _build_share_screen() -> void:
+	for child in get_children():
+		if child != sound_player:
+			child.queue_free()
+
+	var background := ColorRect.new()
+	background.color = Color("#eaf7ff")
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(background)
+
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 24)
+	margin.add_theme_constant_override("margin_right", 24)
+	margin.add_theme_constant_override("margin_top", 32)
+	margin.add_theme_constant_override("margin_bottom", 32)
+	add_child(margin)
+
+	var layout := VBoxContainer.new()
+	layout.alignment = BoxContainer.ALIGNMENT_CENTER
+	layout.add_theme_constant_override("separation", 20)
+	layout.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	margin.add_child(layout)
+
+	var hero := PanelContainer.new()
+	hero.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero.add_theme_stylebox_override("panel", _panel_style(Color("#168eb2"), 24))
+	layout.add_child(hero)
+	var hero_row := HBoxContainer.new()
+	hero_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	hero_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero_row.add_theme_constant_override("separation", 10)
+	hero.add_child(hero_row)
+	hero_row.add_child(_mascot_icon(82))
+	var hero_text := VBoxContainer.new()
+	hero_text.add_theme_constant_override("separation", 2)
+	hero_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero_text.custom_minimum_size.x = 220
+	hero_row.add_child(hero_text)
+	hero_text.add_child(_label("MISSÃO CIDADE LIMPA", 22, Color.WHITE, HORIZONTAL_ALIGNMENT_LEFT))
+	hero_text.add_child(_label("Oi! Eu sou a Tuca. Compartilhe o jogo com os amigos!", 13, Color("#e5fbff"), HORIZONTAL_ALIGNMENT_LEFT))
+
+	layout.add_child(_label("Escolha como jogar ou compartilhar:", 16, INK, HORIZONTAL_ALIGNMENT_CENTER))
+
+	var cards_container := HBoxContainer.new()
+	cards_container.alignment = BoxContainer.ALIGNMENT_CENTER
+	cards_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cards_container.add_theme_constant_override("separation", 16)
+	layout.add_child(cards_container)
+
+	_add_share_card(cards_container, "📱", "BAIXAR APK", "Instale no seu Android\ne jogue offline", APK_DOWNLOAD_URL, Color("#4388df"))
+	_add_share_card(cards_container, "🌐", "JOGAR NA WEB", "Abra no navegador\nsem instalar nada", WEB_PLAY_URL, Color("#36a876"))
+
+	var start_btn := Button.new()
+	start_btn.text = "COMEÇAR AGORA"
+	start_btn.custom_minimum_size.y = 56
+	start_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	start_btn.add_theme_font_size_override("font_size", 18)
+	start_btn.add_theme_color_override("font_color", Color.WHITE)
+	start_btn.add_theme_stylebox_override("normal", _panel_style(Color("#168eb2"), 18))
+	start_btn.add_theme_stylebox_override("hover", _panel_style(Color("#1fa3cb"), 18))
+	start_btn.add_theme_stylebox_override("pressed", _panel_style(Color("#127a9e"), 18))
+	start_btn.pressed.connect(_build_game)
+	layout.add_child(start_btn)
+
+
+func _add_share_card(parent: HBoxContainer, icon: String, title: String, description: String, url: String, color: Color) -> void:
+	var card := PanelContainer.new()
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	card.custom_minimum_size = Vector2(0, 340)
+	card.add_theme_stylebox_override("panel", _panel_style(Color("#f8fdff"), 20))
+	var card_border := StyleBoxFlat.new()
+	card_border.bg_color = Color("#f8fdff")
+	card_border.corner_radius_top_left = 20
+	card_border.corner_radius_top_right = 20
+	card_border.corner_radius_bottom_left = 20
+	card_border.corner_radius_bottom_right = 20
+	card_border.border_color = color
+	card_border.set_border_width_all(3)
+	card.add_theme_stylebox_override("panel", card_border)
+	parent.add_child(card)
+
+	var card_layout := VBoxContainer.new()
+	card_layout.alignment = BoxContainer.ALIGNMENT_CENTER
+	card_layout.add_theme_constant_override("separation", 10)
+	card_layout.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card_layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	card.add_child(card_layout)
+
+	card_layout.add_child(_label(icon, 48, color, HORIZONTAL_ALIGNMENT_CENTER))
+	card_layout.add_child(_label(title, 20, INK, HORIZONTAL_ALIGNMENT_CENTER))
+	card_layout.add_child(_label(description, 13, Color("#41675c"), HORIZONTAL_ALIGNMENT_CENTER))
+
+	var qr_rect := TextureRect.new()
+	qr_rect.custom_minimum_size = Vector2(180, 180)
+	qr_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	qr_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	qr_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card_layout.add_child(qr_rect)
+	_load_qr_code_async(qr_rect, url)
+
+	card_layout.add_child(_label("Aponte a câmera ou toque para copiar", 11, Color("#7a9aa0"), HORIZONTAL_ALIGNMENT_CENTER))
+
+	var copy_btn := Button.new()
+	copy_btn.text = "Copiar link"
+	copy_btn.custom_minimum_size.y = 40
+	copy_btn.add_theme_font_size_override("font_size", 13)
+	copy_btn.add_theme_color_override("font_color", Color.WHITE)
+	copy_btn.add_theme_stylebox_override("normal", _panel_style(color, 12))
+	copy_btn.add_theme_stylebox_override("hover", _panel_style(color.lightened(0.15), 12))
+	copy_btn.add_theme_stylebox_override("pressed", _panel_style(color.darkened(0.1), 12))
+	copy_btn.pressed.connect(_copy_to_clipboard.bind(url))
+	card_layout.add_child(copy_btn)
+
+
+func _load_qr_code_async(qr_rect: TextureRect, url: String) -> void:
+	var http := HTTPRequest.new()
+	add_child(http)
+	var qr_url := "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=" + url.uri_encode()
+	http.request_completed.connect(_on_qr_loaded.bind(qr_rect))
+	http.request(qr_url)
+
+
+func _on_qr_loaded(qr_rect: TextureRect, result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	if response_code == 200 and body.size() > 0:
+		var img := Image.create_from_data(body.size(), body.size(), false, Image.FORMAT_RGBA8, body)
+		if img:
+			var tex := ImageTexture.create_from_image(img)
+			qr_rect.texture = tex
+
+
+func _copy_to_clipboard(text: String) -> void:
+	DisplayServer.clipboard_set(text)
+	status_label.text = "Link copiado! 📋"
+	status_label.add_theme_color_override("font_color", Color("#20754d"))
+	get_tree().create_timer(2.0).timeout.connect(func():
+		if is_instance_valid(status_label):
+			status_label.text = "Tuca: toque e arraste um item para começar!"
+			status_label.add_theme_color_override("font_color", INK)
+	)
 
 
 func _panel_style(color: Color, radius: int) -> StyleBoxFlat:

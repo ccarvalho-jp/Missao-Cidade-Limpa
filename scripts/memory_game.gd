@@ -183,13 +183,23 @@ func _build_board(chosen_items: Array[Dictionary]) -> void:
 	status_panel.add_theme_stylebox_override("panel", _panel_style(Color("#fff2cb"), 14))
 	status_label = _label("Tuca: vire duas cartas e procure o mesmo resíduo!", 14, INK, HORIZONTAL_ALIGNMENT_CENTER)
 	status_label.custom_minimum_size.y = 38
-	status_panel.add_child(status_label)
+	var status_row := HBoxContainer.new()
+	status_row.add_theme_constant_override("separation", 6)
+	status_panel.add_child(status_row)
+	status_row.add_child(status_label)
+	var scroll_up := _scroll_button("↑", "Rolar para cima")
+	status_row.add_child(scroll_up)
+	var scroll_down := _scroll_button("↓", "Rolar para baixo")
+	status_row.add_child(scroll_down)
 	layout.add_child(status_panel)
 
 	var board_scroll := ScrollContainer.new()
 	board_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	board_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	board_scroll.scroll_deadzone = 18
 	layout.add_child(board_scroll)
+	scroll_up.pressed.connect(_scroll_memory_board.bind(board_scroll, -1))
+	scroll_down.pressed.connect(_scroll_memory_board.bind(board_scroll, 1))
 	var board := GridContainer.new()
 	board.columns = 4
 	board.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -257,6 +267,30 @@ func _build_board(chosen_items: Array[Dictionary]) -> void:
 			"matched": false,
 		})
 		button.pressed.connect(_on_card_pressed.bind(index))
+
+
+func _scroll_button(glyph: String, description: String) -> Button:
+	var button := Button.new()
+	button.text = glyph
+	button.tooltip_text = description
+	button.custom_minimum_size = Vector2(44, 42)
+	button.add_theme_font_size_override("font_size", 22)
+	button.add_theme_color_override("font_color", Color.WHITE)
+	button.add_theme_color_override("font_hover_color", Color.WHITE)
+	button.add_theme_stylebox_override("normal", _card_style(Color("#348fbd")))
+	button.add_theme_stylebox_override("hover", _card_style(Color("#49a9d0")))
+	button.add_theme_stylebox_override("pressed", _card_style(Color("#28789f")))
+	return button
+
+
+func _scroll_memory_board(board_scroll: ScrollContainer, direction: int) -> void:
+	var vertical_bar := board_scroll.get_v_scroll_bar()
+	var max_scroll := maxf(0.0, vertical_bar.max_value - vertical_bar.page)
+	board_scroll.scroll_vertical = clampi(
+		board_scroll.scroll_vertical + direction * 140,
+		0,
+		int(max_scroll)
+	)
 
 
 func _on_card_pressed(index: int) -> void:

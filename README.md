@@ -57,6 +57,12 @@ Não compartilhe a chave de assinatura nem senhas de publicação.
 
 O repositório GitHub guarda o código-fonte Godot. O diretório `web-build/` é a exportação que o Vercel entrega ao navegador; ele só estará pronto depois da exportação Web no Godot.
 
+## Baixar o APK
+
+O APK Android para teste é publicado na página [Releases](https://github.com/ccarvalho-jp/Missao-Cidade-Limpa/releases/latest). Baixe `MissaoCidadeLimpa.apk` em um aparelho Android e autorize a instalação quando o sistema pedir. O APK inclui suporte ARMv7 e ARM64; por ser uma versão de teste/debug, o Android pode mostrar um aviso de segurança.
+
+Depois que a implantação Web for criada no Vercel, confirme se a URL corresponde a `https://missao-cidade-limpa.vercel.app`. Os QR codes na tela inicial apontam para esse endereço e para o APK na Release mais recente.
+
 ## Estrutura
 
 ```text
